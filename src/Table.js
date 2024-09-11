@@ -54,23 +54,38 @@ const Table = (props) => {
 
     }
     const handleSubmit = () => {
+
         let filterdata = data.filter((data) => {
 
             let newFilterConfig = Object.entries(filterConfig);
             return newFilterConfig.every(([key, value]) => {
-                return data[key] === value;
+                let { dataType } = headers.find((header) => {
+                    if (header.key === key) {
+                        return true
+                    } else return false;
+                });
 
-            })
+                switch (dataType) {
+                    case "number":
+                        return parseInt(value) === data[key];
+                    case "string":
+                        return value === data[key]
+                }
+
+            });
         });
+
 
         setShowData(filterdata);
 
-
-
     }
+
+
     const RemoveFilterConfig = () => {
         setFilterConfig({});
     }
+
+
     return (
         <div className=' w-full'>
 
@@ -79,25 +94,26 @@ const Table = (props) => {
 
             </div>
             <div className='flex w-full '>
-                <div className='w-1/4 h-40 border-r-2 border-l-slate-500'>
-                    {showDiv ? <>  <div className=' '>
-                        {headers.map((headerConfig) => {
-                            return <div className='flex justify-between p-2 items-center' key={headerConfig.id}>
-                                <div className='px-2'><lable htmlFor={headerConfig.key} >{headerConfig.label}</lable></div>
-                                <div><input type="text" className='border-2 border-slate-300 rounded-lg p-1 ' name={headerConfig.key}
-                                    onChange={handleInputData} value={filterConfig[headerConfig.key] || ""} /></div>
-                            </div>
-                        })}
-                        <div className='flex justify-between '>
-                            <div> <button onClick={RemoveFilterConfig} className='bg-black text-white mx-5 px-4 py-2 rounded-lg active:bg-blue-500'>Reset</button></div>
-                            <div className='flex justify-center'> <button className='bg-black text-white rounded-lg px-4 py-2 font-bold' onClick={handleSubmit}>Search</button></div>
 
+                {showDiv ? <>  <div className=' w-1/4 h-40 border-r-2 border-l-slate-500 mt-20'>
+                    {headers.map((headerConfig) => {
+                        return <div className='flex justify-between p-2 items-center' key={headerConfig.id}>
+                            <div className='px-2'><lable htmlFor={headerConfig.key} >{headerConfig.label}</lable></div>
+                            <div><input type="text" className='border-2 border-slate-300 rounded-lg p-1 ' name={headerConfig.key}
+                                onChange={handleInputData} value={filterConfig[headerConfig.key] || ""} /></div>
                         </div>
+                    })}
+                    <div className='flex justify-between '>
+                        <div> <button onClick={RemoveFilterConfig} className='bg-black text-white mx-5 px-4 py-2 rounded-lg active:bg-blue-500'>Reset</button></div>
+                        <div className='flex justify-center'> <button className='bg-black text-white rounded-lg px-4 py-2 font-bold' onClick={handleSubmit}>Search</button></div>
 
-                    </div></> : null}</div>
+                    </div>
+
+                </div></> : null}
+
 
                 <div className='w-full '>
-                    <table className='w-full ' >
+                    <table className='w-full mt-10 ' >
                         <thead className=''>
 
                             <tr className='border-b-2  bg-black text-white'>
