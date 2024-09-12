@@ -134,10 +134,10 @@ export const movieHeaders = [
     { label: "Genre", dataType: "string", key: "genre" },
     { label: "Duration (min)", dataType: "number", key: "duration" },
     { label: "IMDb Rating", dataType: "number", key: "rating" },
-    { label: "Box Office (M USD)", dataType: "number", key: "box_office" },
+    { label: "Box Office", dataType: "number", key: "box_office" },
     { label: "Language", dataType: "string", key: "language" },
     { label: "Country", dataType: "string", key: "country" },
-    { label: "Budget (M USD)", dataType: "number", key: "budget" }
+    { label: "Budget", dataType: "number", key: "budget" }
 
 ]
 export const moviedata = [

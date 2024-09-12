@@ -42,7 +42,7 @@ const Table = (props) => {
 
             switch (dataType) {
                 case "string":
-                    return a[key].localcompare(b[key]);
+                    return a[key].localeCompare(b[key]);
                 case "number":
                     return a[key] < b[key];
 
@@ -87,15 +87,15 @@ const Table = (props) => {
 
 
     return (
-        <div className=' w-full'>
+        <div className=' w-full overflow-x-scroll'>
 
-            <div className="flex justify-center items-center border-b-2 border-slate-400 p-3 w-full fixed bg-slate-300 z-50 ">
-                <div><FontAwesomeIcon icon={faFilter} onClick={handleShowFilterDiv} /></div>
+            <div className="flex justify-start items-center border-b-2 border-slate-400 p-3 w-full fixed bg-slate-300 z-50 ">
+                <div><FontAwesomeIcon icon={faFilter} onClick={handleShowFilterDiv} />Filter</div>
 
             </div>
             <div className='flex w-full '>
 
-                {showDiv ? <>  <div className=' w-1/4 h-40 border-r-2 border-l-slate-500 mt-20'>
+                {showDiv ? <>  <div className=' w-1/4 h-40 border-r-2 border-l-slate-500 mt-20 md:w-1/2 sm:w-3/4'>
                     {headers.map((headerConfig) => {
                         return <div className='flex justify-between p-2 items-center' key={headerConfig.id}>
                             <div className='px-2'><lable htmlFor={headerConfig.key} >{headerConfig.label}</lable></div>
@@ -118,7 +118,7 @@ const Table = (props) => {
 
                             <tr className='border-b-2  bg-black text-white'>
                                 {headers.map((header) => {
-                                    return <td className="p-4 text-center font-bold font-serif" key={header.key} data-src={JSON.stringify(header)} onClick={handleSort}>{header.label}</td>
+                                    return <td className="p-4 text-start font-normal font-serif" key={header.key} data-src={JSON.stringify(header)} onClick={handleSort}>{header.label}</td>
                                 })}
                             </tr>
 
