@@ -10,10 +10,15 @@ const Table = (props) => {
     let [showDiv, setShowDiv] = useState(false);
     let [showData, setShowData] = useState(data);
     let [filterConfig, setFilterConfig] = useState({});
+    let [pageSize, setPageSize] = useState(5);
+    let [currentPage, setCurrentPage] = useState(0);
+    let [currentData, setCurrentData] = useState(data.slice(0, pageSize));
+    let [pageCount, setPageCount] = useState(Math.ceil(showData.length / pageSize));
+
 
     useEffect(() => {
         if (Object.keys(filterConfig).length == 0) {
-            setShowData(data);
+            setCurrentData(data.slice(0, pageSize));
         }
     }, [filterConfig])
 
@@ -50,7 +55,7 @@ const Table = (props) => {
         })
 
 
-        setShowData(data2);
+        setCurrentData(data2);
 
     }
     const handleSubmit = () => {
@@ -76,7 +81,7 @@ const Table = (props) => {
         });
 
 
-        setShowData(filterdata);
+        setCurrentData(filterdata);
 
     }
 
@@ -85,6 +90,12 @@ const Table = (props) => {
         setFilterConfig({});
     }
 
+    const onPageChange = (index) => {
+        setCurrentPage(index);
+        let currentData = showData.slice(index * pageSize, pageSize * (index + 1));
+        setCurrentData(currentData)
+
+    }
 
     return (
         <div className=' w-full overflow-x-scroll'>
@@ -118,7 +129,8 @@ const Table = (props) => {
 
                             <tr className='border-b-2  bg-black text-white'>
                                 {headers.map((header) => {
-                                    return <td className="p-4 text-start font-normal font-serif" key={header.key} data-src={JSON.stringify(header)} onClick={handleSort}>{header.label}</td>
+                                    return <td className="p-4 text-start
+                                     font-normal font-serif" key={header.key} data-src={JSON.stringify(header)} onClick={handleSort}>{header.label}</td>
                                 })}
                             </tr>
 
@@ -127,7 +139,7 @@ const Table = (props) => {
                         <tbody>
 
                             {
-                                showData.map((person) => {
+                                currentData.map((person) => {
                                     return <tr className='border-b-2 border-slate-300  hover:bg-slate-300 ' key={person.id}>
                                         {headers.map((headerConfig) => {
                                             return <td className="border border-slate-300 p-4">{person[headerConfig.key]}</td>
@@ -139,6 +151,19 @@ const Table = (props) => {
 
                         </tbody>
                     </table>
+                    <div className='flex justify-center items-center my-5 fixed bottom-0 inset-x-0 '>
+                        <button className='p-4 bg-black text-white rounded-l-lg' onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 0}>
+                            prev
+                        </button>
+                        <div className='flex '>
+                            {
+                                Array(pageCount).fill(null).map((page, index) => {
+                                    return <div key={index} className='px-6 py-4 bg-white border-2 ' id={`${currentPage === index ? 'active-btn' : ""}`} onClick={() => { onPageChange(index) }}>{index + 1}</div>
+                                })
+                            }
+                        </div>
+                        <button className='p-4 bg-black text-white  rounded-r-lg' onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === pageCount - 1}>Next</button>
+                    </div>
                 </div>
             </div >
 
