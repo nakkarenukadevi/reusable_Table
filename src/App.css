@@ -4,4 +4,8 @@
 #active-btn{
     background-color:gray;
     color: black;
+};
+#disabled{
+    background-color: darkgray;
+    color:antiquewhite
 }

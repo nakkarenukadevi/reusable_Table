@@ -6,7 +6,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 const Table = (props) => {
-    let { data, headers } = props;
+
+    let { data, headers, enableFilter, enablePagenation } = props;
+
+    let [showFiltericon, setShowFilter] = useState(enableFilter);
+    let [showPagenation, setShowPagenation] = useState(enablePagenation)
     let [showDiv, setShowDiv] = useState(false);
     let [showData, setShowData] = useState(data);
     let [filterConfig, setFilterConfig] = useState({});
@@ -17,6 +21,7 @@ const Table = (props) => {
 
 
     useEffect(() => {
+
         if (Object.keys(filterConfig).length == 0) {
             setCurrentData(data.slice(0, pageSize));
         }
@@ -55,7 +60,7 @@ const Table = (props) => {
         })
 
 
-        setCurrentData(data2);
+        setShowData(data2);
 
     }
     const handleSubmit = () => {
@@ -74,7 +79,7 @@ const Table = (props) => {
                     case "number":
                         return parseInt(value) === data[key];
                     case "string":
-                        return value === data[key]
+                        return value === data[key];
                 }
 
             });
@@ -101,8 +106,8 @@ const Table = (props) => {
         <div className=' w-full overflow-x-scroll'>
 
             <div className="flex justify-start items-center border-b-2 border-slate-400 p-3 w-full fixed bg-slate-300 z-50 ">
-                <div><FontAwesomeIcon icon={faFilter} onClick={handleShowFilterDiv} />Filter</div>
 
+                {showFiltericon ? <><div><FontAwesomeIcon icon={faFilter} onClick={handleShowFilterDiv} />Filter</div></> : null}
             </div>
             <div className='flex w-full '>
 
@@ -137,9 +142,15 @@ const Table = (props) => {
                         </thead>
 
                         <tbody>
-
-                            {
-                                currentData.map((person) => {
+                            {showPagenation === false ? <> {
+                                showData.map((person) => {
+                                    return <tr className='border-b-2 border-slate-300  hover:bg-slate-300 ' key={person.id}>
+                                        {headers.map((headerConfig) => {
+                                            return <td className="border border-slate-300 p-4">{person[headerConfig.key]}</td>
+                                        })}
+                                    </tr>
+                                }
+                                )}</> : <>{currentData.map((person) => {
                                     return <tr className='border-b-2 border-slate-300  hover:bg-slate-300 ' key={person.id}>
                                         {headers.map((headerConfig) => {
                                             return <td className="border border-slate-300 p-4">{person[headerConfig.key]}</td>
@@ -147,11 +158,12 @@ const Table = (props) => {
                                     </tr>
                                 }
 
-                                )}
+                                )}</>}
+
 
                         </tbody>
                     </table>
-                    <div className='flex justify-center items-center my-5 fixed bottom-0 inset-x-0 '>
+                    {showPagenation ? <>     <div className='flex justify-center items-center my-5 fixed bottom-0 inset-x-0 '>
                         <button className='p-4 bg-black text-white rounded-l-lg' onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 0}>
                             prev
                         </button>
@@ -163,7 +175,8 @@ const Table = (props) => {
                             }
                         </div>
                         <button className='p-4 bg-black text-white  rounded-r-lg' onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === pageCount - 1}>Next</button>
-                    </div>
+                    </div></> : null}
+
                 </div>
             </div >
 
